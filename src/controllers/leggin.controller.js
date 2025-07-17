@@ -2,9 +2,9 @@ const Leggin = require("../models/leggin.model");
 
 //funcion crear leggin
 exports.createLeggin = async (req, res) => {
-  const { name, price,description,img } = req.body; 
+  const { name, price,description,img, priceID, idProd, currency, slug } = req.body; 
   try {
-    const newLeggin = await Leggin.create({ name, price,description,img }); //crea un nuevo leggin con los datos que vienen del body
+    const newLeggin = await Leggin.create({ name, price,description,img, priceID, idProd, currency, slug }); //crea un nuevo leggin con los datos que vienen del body
     return res.status(200).json({ newLeggin }); //devuelve el estado 200 y los leggins
   } catch (error) {
     return res.status(500).json({
@@ -16,11 +16,11 @@ exports.createLeggin = async (req, res) => {
 //actualizar leggin por ID
 
 exports.updateLegginById = async (req, res) => {
-  const { name, price,description,img } = req.body; 
+  const { name, price,description,img, priceID, idProd, currency, slug} = req.body; 
    try {
     const updateLeggin = await Leggin.findByIdAndUpdate(
       req.params.id,
-      { name, price,description,img },
+      { name, price,description,img, priceID, idProd, currency, slug },
       { new: true, runValidators: true }
     );
     if (!updateLeggin) {
