@@ -1,9 +1,26 @@
 const mongoose = require('mongoose');
 const legginSchema = mongoose.Schema({
-        name: {
+        idProd: {
             type: String,
-            required: true//valida que el nombre de del producto pasa a la db. Es decir , es obligatorio
+            required: true
         },
+        priceID: {
+            type: String,
+            required: true
+        },
+        currency: {
+            type: String,
+            required: true
+        },
+        slug: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        name: {
+            type: String, 
+            required: true
+            },
         price: {
             type: Number,
             required: true
@@ -17,10 +34,9 @@ const legginSchema = mongoose.Schema({
             required: true
         }
     },
-
     {
         timestamps: true
-    }//propiedad de mongoose que agrega la fecha de creacion y actualizacion
+    }
 )
 
 const Leggin = mongoose.model('Leggin', legginSchema);

@@ -1,31 +1,28 @@
 const User = require("../models/user.model");
+const Cart = require("../models/cart.model");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 //crear usuario
 exports.createUser = async (req, res) => {
+  // obtener usuario, email y password de la petición
   const { username, email, password } = req.body;
   try {
-    // Verificar si ya existe un usuario con ese email o username
-    const existingUser = await User.findOne({
-      $or: [{ email }, { username }],
-    });
-    if (existingUser) {
-      return res.status(400).json({ message: "Usuario ya existe" });
-    }
-
+    // Generemos un fragmento aleatorio para usarse con el password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
-    const newUser = await User.create({
+    const newCart = await Cart.create({});
+    const respuestaDB = await User.create({
       username,
       email,
       password: hashedPassword,
+      cart: newCart
     });
-    return res.status(200).json({ newUser });
+    // usuario creado
+    return res.json(respuestaDB);
   } catch (error) {
-    return res.status(500).json({
-      message: "Hubo un error al crear usuario",
-      error: error.message,
+    return res.status(400).json({
+      msg: error,
     });
   }
 };
@@ -56,11 +53,19 @@ exports.login = async (req, res) => {
       payload,
       process.env.SECRET,
       {
-        expiresIn: "1h",
+        expiresIn: "1d", //el token exira en un dia
       },
       (error, token) => {
         if (error) throw error;
-        res.json({ token }); //devuelve el token
+        const isProd =process.env.NODE_ENV === 'production';
+        res. //responde con el token. El token viajara por una cookie no por html
+          cookie('token',token,{
+          httpOnly: true, 
+          secure: isProd,
+          sameSite: isProd ? 'none' : 'lax', // 'none' para producción, 'lax' para desarrollo
+          maxAge: 24 * 60 * 60 * 1000 // 24 horas en milisegundos
+        })
+        .json({msg: "Login successful"})
       }
     );
   } catch (error) {
@@ -83,35 +88,35 @@ exports.verifyUser = async (req, res) => {
   }
 };
 //actualizar usuario
-exports.updateUserById = async (req, res) => {
- const { username, email, password } = req.body;
+
+exports.updateUser = async(req, res) => {
+  const newDataForOurUser = req.body;
+
   try {
-    let updateFields = { username, email };
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      newDataForOurUser,
+      { new: true }
+    ).select("-password");
 
-    // Si se envía un nuevo password, hashearlo
-    if (password) {
-      const salt = await bcryptjs.genSalt(10);
-      updateFields.password = await bcryptjs.hash(password, salt);
-    }
-
-    const updateUser = await User.findByIdAndUpdate(
-      req.params.id,
-      updateFields,
-      { new: true, runValidators: true }
-    );
-    if (!updateUser) {
-      return res.status(404).json({
-        message: "Usuario no encontrado",
-      });
-    }
-    return res.status(200).json({ updateUser });
+    res.json({
+      msg: "Usuario actualizado con éxito.",
+      data: updatedUser,
+    });
   } catch (error) {
-    return res.status(500).json({
-      message: "Hubo un error actualizando el usuario",
-      error: error.message,
+    console.log(error);
+
+    res.status(500).json({
+      msg: "Hubo un error actualizando el usuario.",
     });
   }
-}
+};
+
+
+
+
+
+
 //obtener todos los usuarios
 // app.get("/users", async (req, res) => {
 //   try {
@@ -124,3 +129,12 @@ exports.updateUserById = async (req, res) => {
 //     }); //status 500 error del server
 //   }
 // });
+//Logout es borrar la cookie
+exports.logout = (req, res) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
+  })
+  return res.json({ msg: 'Logout sucessful' });
+}

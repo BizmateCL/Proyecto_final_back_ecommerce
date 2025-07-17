@@ -1,6 +1,6 @@
 # Proyecto API backend - Backend de Autenticación y Productos (Leggins)
 
-Este proyecto es una aplicación backend que administra la autenticación y autorización de usuarios, así como la gestión de productos "Leggins" basado en los productos desarrollados en clases (Guitarras). Se desarrolló utilizando Node.js, Express, MongoDB (con Mongoose) y JWT para la seguridad. El despliegue se realizó en Railway y la base de datos se aloja en MongoDB Atlas Cloud.
+Este proyecto es una aplicación backend que administra la autenticación y autorización de usuarios, así como la gestión de productos "Leggins" basado en los productos desarrollados en clases. Se desarrolló utilizando Node.js, Express, MongoDB (con Mongoose) y JWT para la seguridad. El despliegue se realizó en Railway y la base de datos se aloja en MongoDB Atlas Cloud.
 
 ## Tecnologías utilizadas
 
@@ -10,6 +10,9 @@ Este proyecto es una aplicación backend que administra la autenticación y auto
 - Railway (deploy)
 - MongoDB Atlas
 - Tailwin CSS VITE
+- Middleware de Express js cookie parser 1.4.7
+
+Esto facilita acceder y manipular cookies en tus endpoints.
 
 ## Estructura
 
@@ -23,14 +26,14 @@ El proyecto está organizado en carpetas para controladores, modelos y rutas.
 
 ## Endpoints principales
 
-### Endpoints de Violin
+### Endpoints de Leggin
 
 | Descripción                  | Método | Endpoint                                                                 | Caso de uso                                                                                   |
 |----------------------------|--------|--------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
 | Crear un producto          | POST   | `https://proyecto6-production.up.railway.app/api/leggins/create`                                                                                                   | Agregar un nuevo violin al catálogo.                                                         |
-| Leer todos los productos   | GET    | `https://proyecto6-production.up.railway.app/api/violins`                                                           | Ver todos los violines disponibles.                                                          |
-| Leer un producto específico| GET    | `https://proyecto6-production.up.railway.app/api/violins/id`                                                       | Ver detalles de un violin por su ID.                                                         |
-| Actualizar un producto     | PUT    | `https://proyecto6-production.up.railway.app/api/violins/id `                                                       | Actualizar nombre o precio de un violin.                                                     |
+| Leer todos los productos   | GET    | `https://proyecto6-production.up.railway.app/api/leggins`                                                           | Ver todos los Leggins disponibles.                                                          |
+| Leer un producto específico| GET    | `https://proyecto6-production.up.railway.app/api/leggins/id`                                                       | Ver detalles de un violin por su ID.                                                         |
+| Actualizar un producto     | PUT    | `https://proyecto6-production.up.railway.app/api/violins/id `                                                       | Actualizar nombre o precio de un leggin.                                                     |
 | Eliminar un producto       | DELETE | `https://proyecto6-production.up.railway.app/api/violins/id `                                                       | Eliminar un violin del catálogo.                                                             |
 
 Nota: ID de ejemplo 68461bb39e8b6b5c2ed08cd1
@@ -44,13 +47,6 @@ Nota: ID de ejemplo 68461bb39e8b6b5c2ed08cd1
 | Actualizar usuario         | PUT    | `https://proyecto6-production.up.railway.app/api/users/update-user/id`                                             | Actualizar información de perfil.                                                            |
 
 
-Nota ejemplo de id de usuario :  684630ca46e88efb1fa37978
-## Despliegue
+### Instalacion cookie parser
 
-El proyecto está desplegado en Railway:  
-[https://proyecto6-production.up.railway.app/](https://proyecto6-production.up.railway.app/)
-
----
-
-**Nota:**  
-Reemplaza `:id` en los endpoints por el ID real del producto o usuario. Al final de cada tabla hay un id de ejemplo.
+npm install cookie parser
